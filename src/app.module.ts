@@ -1,12 +1,16 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
+import { MongooseModule } from '@nestjs/mongoose';
 import { graphiqlExpress, graphqlExpress } from 'apollo-server-express';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 @Module({
-  imports: [GraphQLModule],
+  imports: [
+    GraphQLModule,
+    MongooseModule.forRoot('mongodb://localhost/bookapp-dev'),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

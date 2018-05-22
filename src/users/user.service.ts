@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as crypto from 'crypto';
 import * as _ from 'lodash';
 import { Model } from 'mongoose';
-import util from 'util';
+import * as util from 'util';
 
 import { UserDto } from './dto/user.dto';
 import { User } from './interfaces/user.interface';
@@ -22,11 +22,11 @@ export class UserService {
   constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
 
   async findAll(): Promise<User[]> {
-    return await this.userModel.findAll();
+    return await this.userModel.find().exec();
   }
 
   async findById(id: string): Promise<User> {
-    return await this.userModel.findById(id);
+    return await this.userModel.findById(id).exec();
   }
 
   async create(user: UserDto): Promise<User> {
@@ -36,12 +36,13 @@ export class UserService {
   }
 
   async update(id: string, updatedUser: UserDto): Promise<User> {
-    const user = await this.userModel.findById(id, '-salt -password');
+    const user = await this.userModel.findById(id, '-salt -password').exec();
     _.extend(user, updatedUser);
     user.displayName = `${user.firstName} ${user.lastName}`;
     return await user.save();
   }
 
+  // TODO implement later
   async changeAvatar() {}
 
   async changePassword(
@@ -52,7 +53,7 @@ export class UserService {
     const oldPass = String(oldPassword);
     const newPass = String(newPassword);
 
-    const user = await this.userModel.findById(id);
+    const user = await this.userModel.findById(id).exec();
 
     if (user.authenticate(oldPass)) {
       user.password = newPass;
@@ -64,7 +65,7 @@ export class UserService {
 
   async requestResetPassword(email: string): Promise<string> {
     let token;
-    const user = await this.userModel.findOne({ email });
+    const user = await this.userModel.findOne({ email }).exec();
 
     if (!user) {
       throw new NotFoundException(USER_ERRORS.EMAIL_NOT_FOUND_ERR);
@@ -94,5 +95,11 @@ export class UserService {
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
     return await user.save();
+  }
+
+  async remove(id: string): Promise<User> {
+    const user = await this.userModel.findById(id);
+    await user.remove();
+    return Promise.resolve(user);
   }
 }

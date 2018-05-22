@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { graphiqlExpress, graphqlExpress } from 'apollo-server-express';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
+import { UsersModule } from 'users/user.module';
 
 dotenv.config({
   path: path.resolve(
@@ -20,6 +21,7 @@ dotenv.config({
       pass: process.env.DB_PASSWORD,
       dbName: process.env.DB_NAME,
     }),
+    UsersModule,
   ],
 })
 export class AppModule implements NestModule {

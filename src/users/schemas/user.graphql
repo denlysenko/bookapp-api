@@ -1,0 +1,30 @@
+type Query {
+  me: User!
+  users: [User]!
+  user(id: ID!): User
+}
+
+type Mutation {
+  updateUser(id: ID!, user: User!): User!
+  deleteUser(id: ID!): User!
+  changePassword(id: ID!, newPassword: String!, oldPassword: String!): Boolean
+  requestResetPassword(email: String!): String!
+  resetPassword(token: String!, newPassword: String!): Boolean
+}
+
+type User {
+  id: ID
+  email: String!
+  firstName: String!
+  lastName: String!
+  displayName: String
+  avatar: String
+  createdAt: String
+  updatedAt: String
+  reading: Reading
+}
+
+type Reading {
+  epubUrl: String!
+  bookmark: String
+}

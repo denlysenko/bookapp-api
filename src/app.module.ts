@@ -1,5 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
+import { GraphQLFactory, GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { graphiqlExpress, graphqlExpress } from 'apollo-server-express';
 import * as dotenv from 'dotenv';
@@ -23,11 +23,23 @@ dotenv.config({
   ],
 })
 export class AppModule implements NestModule {
+  constructor(private readonly graphQLFactory: GraphQLFactory) {}
+
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(graphiqlExpress({ endpointURL: '/graphql' }))
       .forRoutes('/graphiql')
-      .apply(graphqlExpress(req => ({ schema: {}, rootValue: req })))
+      .apply(
+        graphqlExpress(req => ({
+          schema: this.createSchema(),
+          rootValue: req,
+        })),
+      )
       .forRoutes('/graphql');
+  }
+
+  private createSchema() {
+    const typeDefs = this.graphQLFactory.mergeTypesByPaths('./**/*.graphql');
+    return this.graphQLFactory.createSchema({ typeDefs });
   }
 }

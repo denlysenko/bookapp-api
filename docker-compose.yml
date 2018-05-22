@@ -1,7 +1,36 @@
-version: "3"
+version: "3.1"
 
 services:
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/var/www/bookapp-api
+    environment:
+      - NODE_ENV=development
+    ports:
+      - '3001:3001'
+    links:
+      - mongodb
+    depends_on: 
+      - mongodb
+    networks:
+      - app-network
+
   mongodb:
     image: mongo:latest
     ports:
       - 27017:27017
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
+    external: true

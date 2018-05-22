@@ -9,7 +9,7 @@ import { AppService } from './app.service';
 @Module({
   imports: [
     GraphQLModule,
-    MongooseModule.forRoot('mongodb://localhost/bookapp-dev'),
+    MongooseModule.forRoot('mongodb://mongodb/bookapp-dev'),
   ],
   controllers: [AppController],
   providers: [AppService],

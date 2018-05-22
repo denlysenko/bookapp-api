@@ -1,6 +1,17 @@
 import * as crypto from 'crypto';
 import * as mongoose from 'mongoose';
 
+export const USER_VALIDATION_ERRORS = {
+  FIRST_NAME_REQUIRED_ERR: 'FIRST_NAME_REQUIRED_ERR',
+  LAST_NAME_REQUIRED_ERR: 'LAST_NAME_REQUIRED_ERR',
+  EMAIL_REQUIRED_ERR: 'EMAIL_REQUIRED_ERR',
+  EMAIL_INVALID_ERR: 'EMAIL_INVALID_ERR',
+  PASSWORD_LENGTH_ERR: 'PASSWORD_LENGTH_ERR',
+  EMAIL_IN_USE_ERR: 'EMAIL_IN_USE_ERR',
+  MISSING_CALLBACK_ERR: 'MISSING_CALLBACK_ERR',
+  MISSING_PASSWORD_OR_SALT: 'MISSING_PASSWORD_OR_SALT',
+};
+
 /**
  * A Validation function for properties
  */
@@ -20,13 +31,16 @@ export const UserSchema = new mongoose.Schema({
     type: String,
     trim: true,
     default: '',
-    validate: [validateProperty, 'Please, fill in your First Name'],
+    validate: [
+      validateProperty,
+      USER_VALIDATION_ERRORS.FIRST_NAME_REQUIRED_ERR,
+    ],
   },
   lastName: {
     type: String,
     trim: true,
     default: '',
-    validate: [validateProperty, 'Please, fill in your Last Name'],
+    validate: [validateProperty, USER_VALIDATION_ERRORS.LAST_NAME_REQUIRED_ERR],
   },
   displayName: {
     type: String,
@@ -35,19 +49,15 @@ export const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     trim: true,
-    validate: [validateProperty, 'Please fill in your Email'],
-    match: [/.+\@.+\..+/, 'Please fill a valid email address'],
+    validate: [validateProperty, USER_VALIDATION_ERRORS.EMAIL_REQUIRED_ERR],
+    match: [/.+\@.+\..+/, USER_VALIDATION_ERRORS.EMAIL_INVALID_ERR],
   },
   password: {
     type: String,
     default: '',
-    validate: [
-      validatePassword,
-      'Password should contain at least 6 characters',
-    ],
+    validate: [validatePassword, USER_VALIDATION_ERRORS.PASSWORD_LENGTH_ERR],
   },
   salt: String,
-  provider: String,
   avatarUrl: String,
   roles: {
     type: [{ type: String, enum: ['user', 'admin'] }],
@@ -89,7 +99,7 @@ UserSchema.path('email').validate((value, respond) => {
     .catch(err => {
       throw err;
     });
-}, 'The specified email address is already in use.');
+}, USER_VALIDATION_ERRORS.EMAIL_IN_USE_ERR);
 
 /**
  * Pre-save hook
@@ -163,7 +173,7 @@ UserSchema.methods = {
     } else if (typeof arguments[1] === 'function') {
       callback = arguments[1];
     } else {
-      throw new Error('Missing Callback');
+      throw new Error(USER_VALIDATION_ERRORS.MISSING_CALLBACK_ERR);
     }
 
     if (!byteSize) {
@@ -192,7 +202,7 @@ UserSchema.methods = {
       if (!callback) {
         return null;
       } else {
-        return callback('Missing password or salt');
+        return callback(USER_VALIDATION_ERRORS.MISSING_PASSWORD_OR_SALT);
       }
     }
 

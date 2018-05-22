@@ -5,9 +5,17 @@ import * as _ from 'lodash';
 import { Model } from 'mongoose';
 import util from 'util';
 
+import { UserDto } from './dto/user.dto';
 import { User } from './interfaces/user.interface';
 
 const randomBytesAsync = util.promisify(crypto.randomBytes);
+
+export const USER_ERRORS = {
+  EMAIL_NOT_FOUND_ERR: 'EMAIL_NOT_FOUND_ERR',
+  TOKEN_NOT_FOUND_ERR: 'TOKEN_NOT_FOUND_ERR',
+};
+
+const TOKEN_EXPIRATION_TIME = 3600000; // 1 hour
 
 @Injectable()
 export class UserService {
@@ -21,13 +29,13 @@ export class UserService {
     return await this.userModel.findById(id);
   }
 
-  async create(user: any): Promise<User> {
+  async create(user: UserDto): Promise<User> {
     const newUser = new this.userModel(user);
     newUser.displayName = `${newUser.firstName} ${newUser.lastName}`;
     return await newUser.save();
   }
 
-  async update(id: string, updatedUser: any): Promise<User> {
+  async update(id: string, updatedUser: UserDto): Promise<User> {
     const user = await this.userModel.findById(id, '-salt -password');
     _.extend(user, updatedUser);
     user.displayName = `${user.firstName} ${user.lastName}`;
@@ -59,13 +67,13 @@ export class UserService {
     const user = await this.userModel.findOne({ email });
 
     if (!user) {
-      throw new NotFoundException('Email not found!');
+      throw new NotFoundException(USER_ERRORS.EMAIL_NOT_FOUND_ERR);
     }
 
     const buffer = await randomBytesAsync(20);
     token = buffer.toString('hex');
     user.resetPasswordToken = token;
-    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+    user.resetPasswordExpires = Date.now() + TOKEN_EXPIRATION_TIME;
     await user.save();
     return Promise.resolve(token);
   }
@@ -79,7 +87,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new NotFoundException('Token not found!');
+      throw new NotFoundException(USER_ERRORS.TOKEN_NOT_FOUND_ERR);
     }
 
     user.password = password;

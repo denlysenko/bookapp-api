@@ -1,0 +1,10 @@
+type Mutation {
+  saveComment(bookId: ID!, authorId: ID!, text: String!): Comment!
+}
+
+type Comment {
+  id: ID
+  bookId: ID
+  author: User
+  text: String
+}

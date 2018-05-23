@@ -33,6 +33,7 @@ input UserInput {
   email: String
   firstName: String
   lastName: String
+  password: String
   reading: ReadingInput
 }
 

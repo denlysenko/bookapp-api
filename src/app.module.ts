@@ -2,6 +2,8 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { GraphQLFactory, GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { graphiqlExpress, graphqlExpress } from 'apollo-server-express';
+import { AuthModule } from 'auth/auth.module';
+import { ConfigModule } from 'config/config.module';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
 import { UsersModule } from 'users/user.module';
@@ -21,7 +23,9 @@ dotenv.config({
       pass: process.env.DB_PASSWORD,
       dbName: process.env.DB_NAME,
     }),
+    ConfigModule,
     UsersModule,
+    AuthModule,
   ],
 })
 export class AppModule implements NestModule {

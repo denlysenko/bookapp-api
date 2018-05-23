@@ -1,3 +1,4 @@
+// tslint:disable:only-arrow-functions
 import * as crypto from 'crypto';
 import * as mongoose from 'mongoose';
 
@@ -15,14 +16,14 @@ export const USER_VALIDATION_ERRORS = {
 /**
  * A Validation function for properties
  */
-const validateProperty = property => {
+const validateProperty = function(property) {
   return !this.updated || property.length;
 };
 
 /**
  * A Validation function for password
  */
-const validatePassword = password => {
+const validatePassword = function(password) {
   return password && password.length > 6;
 };
 
@@ -83,18 +84,18 @@ export const UserSchema = new mongoose.Schema({
 });
 
 // Validate email is not taken
-UserSchema.path('email').validate((value, respond) => {
+UserSchema.path('email').validate(function(value) {
   return this.constructor
     .findOne({ email: value })
     .exec()
     .then(user => {
       if (user) {
-        if (this.id === user.id) {
-          return respond(true);
+        if (this._id === user._id) {
+          return true;
         }
-        return respond(false);
+        return false;
       }
-      return respond(true);
+      return true;
     })
     .catch(err => {
       throw err;
@@ -109,12 +110,12 @@ UserSchema.pre('save', function(next) {
   if (!this.isModified('password')) {
     return next();
   }
-
   // Make salt with a callback
   this.makeSalt((saltErr, salt) => {
     if (saltErr) {
       return next(saltErr);
     }
+
     this.salt = salt;
     this.encryptPassword(this.password, (encryptErr, hashedPassword) => {
       if (encryptErr) {

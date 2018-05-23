@@ -1,1 +1,4 @@
-export interface User {}
+export interface User {
+  _id: string;
+  authenticate?: (password) => boolean;
+}

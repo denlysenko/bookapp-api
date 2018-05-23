@@ -1,5 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { ConfigService } from 'config/config.service';
 import * as crypto from 'crypto';
 import * as _ from 'lodash';
 import { Model } from 'mongoose';
@@ -15,18 +16,23 @@ export const USER_ERRORS = {
   TOKEN_NOT_FOUND_ERR: 'TOKEN_NOT_FOUND_ERR',
 };
 
-const TOKEN_EXPIRATION_TIME = 3600000; // 1 hour
-
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
+  constructor(
+    @InjectModel('User') private readonly userModel: Model<User>,
+    private readonly configService: ConfigService,
+  ) {}
 
-  async findAll(): Promise<User[]> {
-    return await this.userModel.find().exec();
+  async findAll(filter = {}): Promise<User[]> {
+    return await this.userModel.find(filter).exec();
   }
 
   async findById(id: string): Promise<User> {
     return await this.userModel.findById(id).exec();
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    return await this.userModel.findOne({ email }).exec();
   }
 
   async create(user: UserDto): Promise<User> {
@@ -74,7 +80,9 @@ export class UserService {
     const buffer = await randomBytesAsync(20);
     token = buffer.toString('hex');
     user.resetPasswordToken = token;
-    user.resetPasswordExpires = Date.now() + TOKEN_EXPIRATION_TIME;
+    user.resetPasswordExpires =
+      Date.now() +
+      Number(this.configService.get('REQUEST_TOKEN_EXPIRATION_TIME'));
     await user.save();
     return Promise.resolve(token);
   }

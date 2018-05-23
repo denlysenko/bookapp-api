@@ -3,6 +3,7 @@ import { GraphQLFactory, GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { graphiqlExpress, graphqlExpress } from 'apollo-server-express';
 import { AuthModule } from 'auth/auth.module';
+import { BooksModule } from 'books/books.module';
 import { ConfigModule } from 'config/config.module';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
@@ -26,6 +27,7 @@ dotenv.config({
     ConfigModule,
     UsersModule,
     AuthModule,
+    BooksModule,
   ],
 })
 export class AppModule implements NestModule {

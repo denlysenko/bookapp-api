@@ -1,21 +1,31 @@
 import { UseGuards } from '@nestjs/common';
 import { Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
+import { Roles } from 'common/decorators/role.decorator';
+import { RolesGuard } from 'common/guards/roles.guard';
 
 import { UserService } from './user.service';
+
+// TODO move to constans, use also in User.schema
+const ROLES = {
+  ADMIN: 'admin',
+  USER: 'user',
+};
 
 @Resolver('Users')
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   @Query('users')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLES.ADMIN)
   async getUsers() {
     return await this.userService.findAll();
   }
 
   @Query('user')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLES.ADMIN)
   async getUser(obj, args, context, info) {
     const { id } = args;
     return await this.userService.findById(id);
@@ -55,7 +65,8 @@ export class UserResolver {
   }
 
   @Mutation('deleteUser')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLES.ADMIN)
   async deleteUser(obj, args, context, info) {
     const { id } = args;
     return await this.userService.remove(id);

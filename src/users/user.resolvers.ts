@@ -4,15 +4,10 @@ import { AuthGuard } from '@nestjs/passport';
 import { Roles } from 'common/decorators/role.decorator';
 import { RolesGuard } from 'common/guards/roles.guard';
 import { ApiQuery } from 'common/models/api-query.model';
-import { convertToMongoSorting } from 'utils/mongo-sorting';
+import { convertToMongoSortQuery } from 'utils/mongoSortQueryConverter';
 
+import { ROLES } from '../constants';
 import { UserService } from './user.service';
-
-// TODO move to constans, use also in User.schema
-const ROLES = {
-  ADMIN: 'admin',
-  USER: 'user',
-};
 
 @Resolver('Users')
 export class UserResolver {
@@ -23,7 +18,7 @@ export class UserResolver {
   @Roles(ROLES.ADMIN)
   async getUsers(obj, args, context, info) {
     const { filter, skip, first, orderBy } = args;
-    const order = (orderBy && convertToMongoSorting(orderBy)) || null;
+    const order = (orderBy && convertToMongoSortQuery(orderBy)) || null;
     return await this.userService.findAll(
       new ApiQuery(
         filter && { [filter.field]: new RegExp(`^${filter.search}`, 'i') },

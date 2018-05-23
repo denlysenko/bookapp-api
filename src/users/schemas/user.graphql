@@ -24,6 +24,7 @@ type User {
   lastName: String!
   displayName: String
   avatar: String
+  roles: [String!]
   createdAt: String
   updatedAt: String
   reading: Reading

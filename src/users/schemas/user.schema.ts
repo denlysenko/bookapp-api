@@ -2,16 +2,7 @@
 import * as crypto from 'crypto';
 import * as mongoose from 'mongoose';
 
-export const USER_VALIDATION_ERRORS = {
-  FIRST_NAME_REQUIRED_ERR: 'FIRST_NAME_REQUIRED_ERR',
-  LAST_NAME_REQUIRED_ERR: 'LAST_NAME_REQUIRED_ERR',
-  EMAIL_REQUIRED_ERR: 'EMAIL_REQUIRED_ERR',
-  EMAIL_INVALID_ERR: 'EMAIL_INVALID_ERR',
-  PASSWORD_LENGTH_ERR: 'PASSWORD_LENGTH_ERR',
-  EMAIL_IN_USE_ERR: 'EMAIL_IN_USE_ERR',
-  MISSING_CALLBACK_ERR: 'MISSING_CALLBACK_ERR',
-  MISSING_PASSWORD_OR_SALT: 'MISSING_PASSWORD_OR_SALT',
-};
+import { ROLES, USER_VALIDATION_ERRORS } from '../../constants';
 
 /**
  * A Validation function for properties
@@ -61,8 +52,8 @@ export const UserSchema = new mongoose.Schema({
   salt: String,
   avatarUrl: String,
   roles: {
-    type: [{ type: String, enum: ['user', 'admin'] }],
-    default: ['user'],
+    type: [{ type: String, enum: [ROLES.ADMIN, ROLES.USER] }],
+    default: [ROLES.USER],
   },
   updatedAt: Date,
   createdAt: {

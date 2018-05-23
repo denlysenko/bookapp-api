@@ -8,15 +8,11 @@ import * as _ from 'lodash';
 import { Model } from 'mongoose';
 import * as util from 'util';
 
+import { USER_VALIDATION_ERRORS } from '../constants';
 import { UserDto } from './dto/user.dto';
 import { User } from './interfaces/user.interface';
 
 const randomBytesAsync = util.promisify(crypto.randomBytes);
-
-export const USER_ERRORS = {
-  EMAIL_NOT_FOUND_ERR: 'EMAIL_NOT_FOUND_ERR',
-  TOKEN_NOT_FOUND_ERR: 'TOKEN_NOT_FOUND_ERR',
-};
 
 @Injectable()
 export class UserService {
@@ -88,7 +84,7 @@ export class UserService {
     const user = await this.userModel.findOne({ email }).exec();
 
     if (!user) {
-      throw new NotFoundException(USER_ERRORS.EMAIL_NOT_FOUND_ERR);
+      throw new NotFoundException(USER_VALIDATION_ERRORS.EMAIL_NOT_FOUND_ERR);
     }
 
     const buffer = await randomBytesAsync(20);
@@ -110,7 +106,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new NotFoundException(USER_ERRORS.TOKEN_NOT_FOUND_ERR);
+      throw new NotFoundException(USER_VALIDATION_ERRORS.TOKEN_NOT_FOUND_ERR);
     }
 
     user.password = password;

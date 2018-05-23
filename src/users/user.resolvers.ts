@@ -1,4 +1,6 @@
+import { UseGuards } from '@nestjs/common';
 import { Mutation, Query, Resolver } from '@nestjs/graphql';
+import { AuthGuard } from '@nestjs/passport';
 
 import { UserService } from './user.service';
 
@@ -7,26 +9,34 @@ export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   @Query('users')
+  @UseGuards(AuthGuard('jwt'))
   async getUsers() {
     return await this.userService.findAll();
   }
 
   @Query('user')
+  @UseGuards(AuthGuard('jwt'))
   async getUser(obj, args, context, info) {
     const { id } = args;
     return await this.userService.findById(id);
   }
 
   @Query('me')
-  async me() {}
+  @UseGuards(AuthGuard('jwt'))
+  async me(obj, args, context, info) {
+    const id = info.rootValue.user._id;
+    return await this.userService.findById(id);
+  }
 
   @Mutation('updateUser')
+  @UseGuards(AuthGuard('jwt'))
   async updateUser(obj, args, context, info) {
     const { id, user } = args;
     return await this.userService.update(id, user);
   }
 
   @Mutation('changePassword')
+  @UseGuards(AuthGuard('jwt'))
   async changePassword(obj, args, context, info) {
     const { id, newPassword, oldPassword } = args;
     return await this.userService.changePassword(id, oldPassword, newPassword);
@@ -45,6 +55,7 @@ export class UserResolver {
   }
 
   @Mutation('deleteUser')
+  @UseGuards(AuthGuard('jwt'))
   async deleteUser(obj, args, context, info) {
     const { id } = args;
     return await this.userService.remove(id);

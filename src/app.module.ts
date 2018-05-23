@@ -32,12 +32,14 @@ export class AppModule implements NestModule {
   constructor(private readonly graphQLFactory: GraphQLFactory) {}
 
   configure(consumer: MiddlewareConsumer) {
+    const schema = this.createSchema();
+
     consumer
       .apply(graphiqlExpress({ endpointURL: '/graphql' }))
       .forRoutes('/graphiql')
       .apply(
         graphqlExpress(req => ({
-          schema: this.createSchema(),
+          schema,
           rootValue: req,
         })),
       )

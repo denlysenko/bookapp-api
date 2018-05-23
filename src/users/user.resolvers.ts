@@ -3,6 +3,8 @@ import { Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from 'common/decorators/role.decorator';
 import { RolesGuard } from 'common/guards/roles.guard';
+import { ApiQuery } from 'common/models/api-query.model';
+import { convertToMongoSorting } from 'utils/mongo-sorting';
 
 import { UserService } from './user.service';
 
@@ -19,8 +21,17 @@ export class UserResolver {
   @Query('users')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(ROLES.ADMIN)
-  async getUsers() {
-    return await this.userService.findAll();
+  async getUsers(obj, args, context, info) {
+    const { filter, skip, first, orderBy } = args;
+    const order = (orderBy && convertToMongoSorting(orderBy)) || null;
+    return await this.userService.findAll(
+      new ApiQuery(
+        filter && { [filter.field]: new RegExp(`^${filter.search}`, 'i') },
+        first,
+        skip,
+        order,
+      ),
+    );
   }
 
   @Query('user')

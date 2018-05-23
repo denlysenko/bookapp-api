@@ -1,5 +1,7 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { ApiQuery } from 'common/models/api-query.model';
+import { ApiResponse } from 'common/models/api-response.model';
 import { ConfigService } from 'config/config.service';
 import * as crypto from 'crypto';
 import * as _ from 'lodash';
@@ -23,8 +25,20 @@ export class UserService {
     private readonly configService: ConfigService,
   ) {}
 
-  async findAll(filter = {}): Promise<User[]> {
-    return await this.userModel.find(filter).exec();
+  async findAll(query?: ApiQuery): Promise<ApiResponse<User>> {
+    const where = query.filter || {};
+    const count = await this.userModel.count(where);
+    const rows = await this.userModel
+      .find(where)
+      .skip(query.skip)
+      .limit(query.first || Number(this.configService.get('DEFAULT_LIMIT')))
+      .sort(query.order)
+      .exec();
+
+    return {
+      count,
+      rows,
+    };
   }
 
   async findById(id: string): Promise<User> {

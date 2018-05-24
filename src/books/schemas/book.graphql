@@ -10,6 +10,8 @@ type Query {
 
 type Mutation {
   createBook(book: BookInput!): Book!
+  updateBook(id: ID!, book: BookInput!): Book!
+  rateBook(id: ID!, rate: Int!): Book!
 }
 
 type Book {

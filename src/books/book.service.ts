@@ -32,8 +32,10 @@ export class BookService {
     };
   }
 
-  async findById(id: string): Promise<Book> {
-    return await this.bookModel.findById(id).exec();
+  async findBySlug(slug: string): Promise<Book> {
+    return await this.bookModel
+      .findOneAndUpdate({ slug }, { $inc: { views: 1 } })
+      .exec();
   }
 
   async create(book: BookDto): Promise<Book> {
@@ -45,5 +47,17 @@ export class BookService {
     const updatingBook = this.bookModel.findOne({ slug }).exec();
     _.extend(updatingBook, book);
     return await updatingBook.save();
+  }
+
+  // TODO add subscriptions
+  async rateBook(id: string, newRate: number): Promise<Book> {
+    const book = await this.bookModel.findById(id).exec();
+    const total_rates = book.total_rates + 1;
+    const total_rating = book.total_rating + newRate;
+    const rating = Math.ceil(total_rating / total_rates);
+    book.total_rates = total_rates;
+    book.total_rating = total_rating;
+    book.rating = rating;
+    return book.save();
   }
 }

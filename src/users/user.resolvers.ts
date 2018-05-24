@@ -37,40 +37,40 @@ export class UserResolver {
     return await this.userService.findById(id);
   }
 
-  @Query('me')
+  @Query()
   @UseGuards(AuthGuard('jwt'))
   async me(obj, args, context, info) {
     const id = info.rootValue.user._id;
     return await this.userService.findById(id);
   }
 
-  @Mutation('updateUser')
+  @Mutation()
   @UseGuards(AuthGuard('jwt'))
   async updateUser(obj, args, context, info) {
     const { id, user } = args;
     return await this.userService.update(id, user);
   }
 
-  @Mutation('changePassword')
+  @Mutation()
   @UseGuards(AuthGuard('jwt'))
   async changePassword(obj, args, context, info) {
     const { id, newPassword, oldPassword } = args;
     return await this.userService.changePassword(id, oldPassword, newPassword);
   }
 
-  @Mutation('requestResetPassword')
+  @Mutation()
   async requestResetPassword(obj, args, context, info) {
     const { email } = args;
     return await this.userService.requestResetPassword(email);
   }
 
-  @Mutation('resetPassword')
+  @Mutation()
   async resetPassword(obj, args, context, info) {
     const { token, newPassword } = args;
     return await this.userService.resetPassword(token, newPassword);
   }
 
-  @Mutation('deleteUser')
+  @Mutation()
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(ROLES.ADMIN)
   async deleteUser(obj, args, context, info) {

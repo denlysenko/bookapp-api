@@ -14,16 +14,18 @@ export class CommentResolver {
     private readonly userService: UserService,
     private readonly commentService: CommentsService,
   ) {
-    // need to understand how it should work
-    this.usersLoader = new DataLoader((userIds: string[]) =>
-      userService.findManyByIds(userIds),
-    );
+    this.usersLoader = new DataLoader((userIds: string[]) => {
+      const promises = userIds.map(id => {
+        return userService.findById(id);
+      });
+      return Promise.all(promises);
+    });
   }
 
   @ResolveProperty('author')
-  getAuthor(comment, args, context, info) {
+  async getAuthor(comment, args, context, info) {
     const { authorId } = comment;
-    return this.userService.findById(authorId);
+    return await this.usersLoader.load(authorId);
   }
 
   @Mutation('addComment')

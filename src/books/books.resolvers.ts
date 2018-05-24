@@ -39,7 +39,7 @@ export class BooksResolvers {
   @ResolveProperty('comments')
   async getComments(book, args, context, info) {
     const { id } = book;
-    return this.commentService.getAllForBook(id);
+    return await this.commentService.getAllForBook(id);
   }
 
   @Mutation('createBook')

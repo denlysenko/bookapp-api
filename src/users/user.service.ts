@@ -45,10 +45,6 @@ export class UserService {
     return await this.userModel.findOne({ email }).exec();
   }
 
-  async findManyByIds(ids: string[]): Promise<User[]> {
-    return this.userModel.find({ id: { $in: ids } }).exec();
-  }
-
   async create(user: UserDto): Promise<User> {
     const newUser = new this.userModel(user);
     newUser.displayName = `${newUser.firstName} ${newUser.lastName}`;

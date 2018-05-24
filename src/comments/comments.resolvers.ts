@@ -14,18 +14,19 @@ export class CommentResolver {
     private readonly userService: UserService,
     private readonly commentService: CommentsService,
   ) {
+    // need to understand how it should work
     this.usersLoader = new DataLoader((userIds: string[]) =>
       userService.findManyByIds(userIds),
     );
   }
 
-  @ResolveProperty()
-  async author(comment, args, context, info) {
+  @ResolveProperty('author')
+  getAuthor(comment, args, context, info) {
     const { authorId } = comment;
-    return this.usersLoader.load(authorId);
+    return this.userService.findById(authorId);
   }
 
-  @Mutation('saveComment')
+  @Mutation('addComment')
   @UseGuards(AuthGuard('jwt'))
   async addComment(obj, args, context, info) {
     const authorId = info.rootValue.user._id;

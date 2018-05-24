@@ -8,6 +8,10 @@ type Query {
   book(slug: String!): Book!
 }
 
+type Mutation {
+  createBook(book: BookInput!): Book!
+}
+
 type Book {
   id: ID
   title: String
@@ -31,6 +35,14 @@ type Book {
 type BooksResponse {
   count: Int
   rows: [Book]!
+}
+
+input BookInput {
+  title: String!
+  author: String!
+  description: String
+  paid: Boolean
+  price: Int
 }
 
 enum BookOrderByInput {

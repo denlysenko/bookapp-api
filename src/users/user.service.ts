@@ -46,7 +46,7 @@ export class UserService {
   }
 
   async findManyByIds(ids: string[]): Promise<User[]> {
-    return await this.userModel.find({ id: { $in: ids } });
+    return this.userModel.find({ id: { $in: ids } }).exec();
   }
 
   async create(user: UserDto): Promise<User> {

@@ -1,5 +1,5 @@
 type Mutation {
-  saveComment(bookId: ID!, text: String!): Comment!
+  addComment(bookId: ID!, text: String!): Comment!
 }
 
 type Comment {

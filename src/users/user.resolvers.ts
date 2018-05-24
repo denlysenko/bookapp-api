@@ -9,7 +9,7 @@ import { convertToMongoSortQuery } from 'utils/mongoSortQueryConverter';
 import { ROLES } from '../constants';
 import { UserService } from './user.service';
 
-@Resolver('Users')
+@Resolver()
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 

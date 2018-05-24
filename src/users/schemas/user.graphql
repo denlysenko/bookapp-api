@@ -1,7 +1,7 @@
 type Query {
   me: User!
   users(
-    filter: UserFilterInput
+    filter: FilterInput
     skip: Int
     first: Int
     orderBy: UserOrderByInput
@@ -54,7 +54,7 @@ input UserReadingInput {
 }
 
 # maybe needs to be moved in general schema
-input UserFilterInput {
+input FilterInput {
   field: String
   search: String
 }

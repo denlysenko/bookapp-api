@@ -1,0 +1,49 @@
+type Query {
+  books(
+    filter: FilterInput
+    skip: Int
+    first: Int
+    orderBy: BookOrderByInput
+  ): BooksResponse!
+  book(slug: String!): Book!
+}
+
+type Book {
+  id: ID
+  title: String
+  author: String
+  coverUrl: String
+  epubUrl: String
+  description: String
+  slug: String
+  url: String
+  total_rating: Int
+  total_rates: Int
+  rating: Int
+  views: Int
+  paid: Boolean
+  price: Int
+  comments: [Comment]
+  createdAt: String
+  updatedAt: String
+}
+
+type BooksResponse {
+  count: Int
+  rows: [Book]!
+}
+
+enum BookOrderByInput {
+  id_asc
+  id_desc
+  title_asc
+  title_desc
+  author_asc
+  author_desc
+  rating_asc
+  rating_desc
+  views_asc
+  views_desc
+  createdAt_asc
+  createdAt_desc
+}

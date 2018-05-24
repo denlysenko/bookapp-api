@@ -25,7 +25,7 @@ export class CommentResolver {
     return this.usersLoader.load(authorId);
   }
 
-  @Mutation('addComment')
+  @Mutation('saveComment')
   @UseGuards(AuthGuard('jwt'))
   async addComment(obj, args, context, info) {
     const authorId = info.rootValue.user._id;

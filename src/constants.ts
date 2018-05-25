@@ -7,6 +7,12 @@ export const ROLES = {
   USER: 'user',
 };
 
+export enum Bookmarks {
+  MUSTREAD,
+  WISHLIST,
+  FAVOURITE,
+}
+
 export const USER_VALIDATION_ERRORS = {
   FIRST_NAME_REQUIRED_ERR: 'FIRST_NAME_REQUIRED_ERR',
   LAST_NAME_REQUIRED_ERR: 'LAST_NAME_REQUIRED_ERR',

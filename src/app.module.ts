@@ -2,6 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { GraphQLFactory } from '@nestjs/graphql';
 import { graphiqlExpress, graphqlExpress } from 'apollo-server-express';
 import { AuthModule } from 'auth/auth.module';
+import { BookmarksModule } from 'bookmarks/bookmarks.module';
 import { BooksModule } from 'books/books.module';
 import { CommentsModule } from 'comments/comments.module';
 import { CoreModule } from 'core/core.module';
@@ -9,7 +10,14 @@ import { SubscriptionService } from 'subscriptions/subscription.service';
 import { UsersModule } from 'users/user.module';
 
 @Module({
-  imports: [CoreModule, AuthModule, UsersModule, BooksModule, CommentsModule],
+  imports: [
+    CoreModule,
+    AuthModule,
+    UsersModule,
+    BooksModule,
+    CommentsModule,
+    BookmarksModule,
+  ],
 })
 export class AppModule implements NestModule {
   constructor(

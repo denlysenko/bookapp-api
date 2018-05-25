@@ -3,9 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { ApiQuery } from 'common/models/api-query.model';
 import { ApiResponse } from 'common/models/api-response.model';
 import { ConfigService } from 'config/config.service';
+import { LogDto } from 'logs/dto/log.dto';
+import { LogService } from 'logs/log.service';
 import { Model } from 'mongoose';
 
-import { BOOKMARK_ERRORS } from '../constants';
+import { BOOKMARK_ERRORS, BOOKMARKS } from '../constants';
 import { Bookmark } from './interfaces/bookmark.interface';
 
 @Injectable()
@@ -13,6 +15,7 @@ export class BookmarkService {
   constructor(
     @InjectModel('Bookmark') private readonly bookmarkModel: Model<Bookmark>,
     private readonly configService: ConfigService,
+    private readonly logService: LogService,
   ) {}
 
   async getByType(query?: ApiQuery): Promise<ApiResponse<Bookmark>> {
@@ -39,9 +42,13 @@ export class BookmarkService {
     if (bookmark) {
       throw new BadRequestException(BOOKMARK_ERRORS.BOOKMARK_UNIQUE_ERR);
     }
-
+    // BOOK_ADDED_TO_MUSTREAD
     const newBookmark = new this.bookmarkModel({ type, userId, bookId });
-    return await newBookmark.save();
+    await newBookmark.save();
+    await this.logService.create(
+      new LogDto(userId, `BOOK_ADDED_TO_${BOOKMARKS[type]}`, bookId),
+    );
+    return newBookmark;
   }
 
   async removeFromBookmarks(type: string, userId: string, bookId: string) {
@@ -50,7 +57,11 @@ export class BookmarkService {
       throw new BadRequestException(BOOKMARK_ERRORS.BOOKMARK_NOT_FOUND_ERR);
     }
 
+    // BOOK_REMOVED_FROM_MUSTREAD
     await bookmark.remove();
+    await this.logService.create(
+      new LogDto(userId, `BOOK_REMOVED_FROM_${BOOKMARKS[type]}`, bookId),
+    );
     return bookmark;
   }
 }

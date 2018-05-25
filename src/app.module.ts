@@ -3,12 +3,15 @@ import { GraphQLFactory } from '@nestjs/graphql';
 import { graphiqlExpress, graphqlExpress } from 'apollo-server-express';
 import { AuthModule } from 'auth/auth.module';
 import { BookmarksModule } from 'bookmarks/bookmarks.module';
+import { BookService } from 'books/book.service';
 import { BooksModule } from 'books/books.module';
 import { CommentsModule } from 'comments/comments.module';
 import { CoreModule } from 'core/core.module';
+import * as DataLoader from 'dataloader';
 import { LogsModule } from 'logs/logs.module';
 import { SubscriptionService } from 'subscriptions/subscription.service';
 import { UsersModule } from 'users/user.module';
+import { UserService } from 'users/user.service';
 
 @Module({
   imports: [
@@ -25,11 +28,23 @@ export class AppModule implements NestModule {
   constructor(
     private readonly graphQLFactory: GraphQLFactory,
     private readonly subscriptionService: SubscriptionService,
+    private readonly bookService: BookService,
+    private readonly userService: UserService,
   ) {}
 
   configure(consumer: MiddlewareConsumer) {
     const schema = this.createSchema();
     this.subscriptionService.createServer(schema);
+    const loaders = {
+      booksLoader: new DataLoader((bookIds: string[]) => {
+        const promises = bookIds.map(id => this.bookService.findById(id));
+        return Promise.all(promises);
+      }),
+      usersLoader: new DataLoader((userIds: string[]) => {
+        const promises = userIds.map(id => this.userService.findById(id));
+        return Promise.all(promises);
+      }),
+    };
 
     consumer
       .apply(
@@ -43,6 +58,9 @@ export class AppModule implements NestModule {
         graphqlExpress(req => ({
           schema,
           rootValue: req,
+          context: {
+            loaders,
+          },
         })),
       )
       .forRoutes('/graphql');

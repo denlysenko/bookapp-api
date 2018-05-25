@@ -1,8 +1,7 @@
 export class LogDto {
-  readonly userId: string;
-  readonly action: string;
-  readonly book: {
-    title: string;
-    author: string;
-  };
+  constructor(
+    public readonly userId: string,
+    public readonly action: string,
+    public readonly bookId: string,
+  ) {}
 }

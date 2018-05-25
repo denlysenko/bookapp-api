@@ -15,12 +15,7 @@ type Log {
   id: ID
   action: String
   createdAt: String
-  book: BookData
-}
-
-type BookData {
-  title: String
-  author: String
+  book: Book
 }
 
 enum LogOrderByInput {

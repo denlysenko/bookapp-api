@@ -3,8 +3,5 @@ export interface Log {
   action: string;
   userId: string;
   createdAt: Date;
-  book: {
-    title: string;
-    quthor: string;
-  };
+  bookId: string;
 }

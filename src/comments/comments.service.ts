@@ -1,13 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { LogDto } from 'logs/dto/log.dto';
+import { LogService } from 'logs/log.service';
 import { Model } from 'mongoose';
 
+import { UserActions } from '../constants';
 import { Comment } from './interfaces/comment.interface';
 
 @Injectable()
 export class CommentsService {
   constructor(
     @InjectModel('Comment') private readonly commentModel: Model<Comment>,
+    private readonly logService: LogService,
   ) {}
 
   async getAllForBook(bookId: string) {
@@ -21,6 +25,10 @@ export class CommentsService {
       text,
     });
 
-    return await newComment.save();
+    await newComment.save();
+    await this.logService.create(
+      new LogDto(authorId, UserActions.COMMENT_ADDED, bookId),
+    );
+    return newComment;
   }
 }

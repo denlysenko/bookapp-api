@@ -48,20 +48,23 @@ export class BooksResolvers {
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(ROLES.ADMIN)
   async createBook(obj, { book }, context, info) {
-    return await this.bookService.create(book);
+    const userId = info.rootValue.user._id;
+    return await this.bookService.create(book, userId);
   }
 
   @Mutation()
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(ROLES.ADMIN)
   async updateBook(obj, { id, book }, context, info) {
-    return await this.bookService.update(id, book);
+    const userId = info.rootValue.user._id;
+    return await this.bookService.update(id, book, userId);
   }
 
   @Mutation()
   @UseGuards(AuthGuard('jwt'))
   async rateBook(obj, { id, rate }, context, info) {
-    const bookRate = await this.bookService.rateBook(id, rate);
+    const userId = info.rootValue.user._id;
+    const bookRate = await this.bookService.rateBook(id, rate, userId);
     this.pubSub.publish('bookRated', { bookRated: bookRate });
     return bookRate;
   }

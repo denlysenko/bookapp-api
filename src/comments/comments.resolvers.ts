@@ -1,31 +1,21 @@
 import { Inject, UseGuards } from '@nestjs/common';
 import { Mutation, ResolveProperty, Resolver, Subscription } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
-import * as DataLoader from 'dataloader';
 import { PubSub } from 'graphql-subscriptions';
-import { UserService } from 'users/user.service';
 
 import { PUB_SUB } from '../constants';
 import { CommentsService } from './comments.service';
 
 @Resolver('Comment')
 export class CommentResolver {
-  usersLoader: any;
-
   constructor(
-    private readonly userService: UserService,
     private readonly commentService: CommentsService,
     @Inject(PUB_SUB) private readonly pubSub: PubSub,
-  ) {
-    this.usersLoader = new DataLoader((userIds: string[]) => {
-      const promises = userIds.map(id => userService.findById(id));
-      return Promise.all(promises);
-    });
-  }
+  ) {}
 
   @ResolveProperty('author')
   async getAuthor({ authorId }, args, context, info) {
-    return await this.usersLoader.load(authorId);
+    return await context.loaders.usersLoader.load(authorId);
   }
 
   @Mutation()

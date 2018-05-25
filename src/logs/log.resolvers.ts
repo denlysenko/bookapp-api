@@ -1,5 +1,5 @@
 import { Inject, UseGuards } from '@nestjs/common';
-import { Query, Resolver, Subscription } from '@nestjs/graphql';
+import { Query, ResolveProperty, Resolver, Subscription } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiQuery } from 'common/models/api-query.model';
 import { PubSub } from 'graphql-subscriptions';
@@ -8,7 +8,7 @@ import { convertToMongoSortQuery } from 'utils/mongoSortQueryConverter';
 import { PUB_SUB } from '../constants';
 import { LogService } from './log.service';
 
-@Resolver()
+@Resolver('Log')
 export class LogResolver {
   constructor(
     private readonly logService: LogService,
@@ -30,5 +30,10 @@ export class LogResolver {
     return {
       subscribe: () => this.pubSub.asyncIterator('logCreated'),
     };
+  }
+
+  @ResolveProperty('book')
+  async getBook({ bookId }, args, context, info) {
+    return await context.loaders.booksLoader.load(bookId);
   }
 }

@@ -1,6 +1,13 @@
 import { Global, Module } from '@nestjs/common';
+import { PubSub } from 'graphql-subscriptions';
 
 import { ConfigService } from './config.service';
+
+const pubSubProvider = {
+  // TODO move into separate file
+  provide: 'PubSub',
+  useValue: new PubSub(),
+};
 
 @Global()
 @Module({
@@ -11,7 +18,8 @@ import { ConfigService } from './config.service';
         `${process.cwd()}/src/config/${process.env.NODE_ENV}/.env`,
       ),
     },
+    pubSubProvider,
   ],
-  exports: [ConfigService],
+  exports: [ConfigService, 'PubSub'],
 })
 export class ConfigModule {}

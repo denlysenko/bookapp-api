@@ -1,7 +1,8 @@
-import { UseGuards } from '@nestjs/common';
-import { Mutation, ResolveProperty, Resolver } from '@nestjs/graphql';
+import { Inject, UseGuards } from '@nestjs/common';
+import { Mutation, ResolveProperty, Resolver, Subscription } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
 import * as DataLoader from 'dataloader';
+import { PubSub } from 'graphql-subscriptions';
 import { UserService } from 'users/user.service';
 
 import { CommentsService } from './comments.service';
@@ -13,6 +14,7 @@ export class CommentResolver {
   constructor(
     private readonly userService: UserService,
     private readonly commentService: CommentsService,
+    @Inject('PubSub') private readonly pubSub: PubSub,
   ) {
     this.usersLoader = new DataLoader((userIds: string[]) => {
       const promises = userIds.map(id => {
@@ -31,6 +33,19 @@ export class CommentResolver {
   @UseGuards(AuthGuard('jwt'))
   async addComment(obj, { bookId, text }, context, info) {
     const authorId = info.rootValue.user._id;
-    return await this.commentService.saveForBook(bookId, authorId, text);
+    const comment = await this.commentService.saveForBook(
+      bookId,
+      authorId,
+      text,
+    );
+    this.pubSub.publish('commentAdded', { commentAdded: comment });
+    return comment;
+  }
+
+  @Subscription()
+  commentAdded() {
+    return {
+      subscribe: () => this.pubSub.asyncIterator('commentAdded'),
+    };
   }
 }

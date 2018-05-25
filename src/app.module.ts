@@ -49,7 +49,7 @@ export class AppModule implements NestModule {
       .apply(
         graphiqlExpress({
           endpointURL: '/graphql',
-          subscriptionsEndpoint: `ws://localhost:3002/subscriptions`,
+          subscriptionsEndpoint: 'ws://localhost:3002/subscriptions',
         }),
       )
       .forRoutes('/graphiql')

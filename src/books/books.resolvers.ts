@@ -1,10 +1,11 @@
-import { UseGuards } from '@nestjs/common';
-import { Mutation, Query, ResolveProperty, Resolver } from '@nestjs/graphql';
+import { Inject, UseGuards } from '@nestjs/common';
+import { Mutation, Query, ResolveProperty, Resolver, Subscription } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
 import { CommentsService } from 'comments/comments.service';
 import { Roles } from 'common/decorators/role.decorator';
 import { RolesGuard } from 'common/guards/roles.guard';
 import { ApiQuery } from 'common/models/api-query.model';
+import { PubSub } from 'graphql-subscriptions';
 import { convertToMongoSortQuery } from 'utils/mongoSortQueryConverter';
 
 import { ROLES } from '../constants';
@@ -15,6 +16,7 @@ export class BooksResolvers {
   constructor(
     private readonly bookService: BookService,
     private readonly commentService: CommentsService,
+    @Inject('PubSub') private readonly pubSub: PubSub,
   ) {}
 
   @Query('books')
@@ -59,6 +61,15 @@ export class BooksResolvers {
   @Mutation()
   @UseGuards(AuthGuard('jwt'))
   async rateBook(obj, { id, rate }, context, info) {
-    return await this.bookService.rateBook(id, rate);
+    const bookRate = await this.bookService.rateBook(id, rate);
+    this.pubSub.publish('bookRated', { bookRated: bookRate });
+    return bookRate;
+  }
+
+  @Subscription()
+  bookRated() {
+    return {
+      subscribe: () => this.pubSub.asyncIterator('bookRated'),
+    };
   }
 }

@@ -13,5 +13,6 @@ import { BookSchema } from './schemas/book.schema';
     CommentsModule,
   ],
   providers: [BookService, BooksResolvers, pubSubProvider],
+  exports: [BookService],
 })
 export class BooksModule {}

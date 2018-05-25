@@ -18,9 +18,7 @@ export class CommentResolver {
     @Inject(PUB_SUB) private readonly pubSub: PubSub,
   ) {
     this.usersLoader = new DataLoader((userIds: string[]) => {
-      const promises = userIds.map(id => {
-        return userService.findById(id);
-      });
+      const promises = userIds.map(id => userService.findById(id));
       return Promise.all(promises);
     });
   }

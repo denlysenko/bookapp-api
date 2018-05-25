@@ -38,6 +38,10 @@ export class BookService {
       .exec();
   }
 
+  async findById(id: string): Promise<Book> {
+    return await this.bookModel.findById(id).exec();
+  }
+
   async create(book: BookDto): Promise<Book> {
     const newBook = new this.bookModel(book);
     return await newBook.save();

@@ -1,0 +1,18 @@
+type Query {
+  bookmarks(type: Int!, skip: Int, first: Int): BookmarksResponse!
+}
+
+type Mutation {
+  addToBookmarks(type: Int!, bookId: String!): Bookmark!
+  removeFromBookmarks(type: Int!, bookId: String!): Bookmark!
+}
+
+type BookmarksResponse {
+  count: Int
+  rows: [Bookmark]!
+}
+
+type Bookmark {
+  type: Int!
+  book: Book!
+}

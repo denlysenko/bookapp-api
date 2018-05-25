@@ -118,6 +118,6 @@ export class UserService {
   async remove(id: string): Promise<User> {
     const user = await this.userModel.findById(id);
     await user.remove();
-    return Promise.resolve(user);
+    return user;
   }
 }

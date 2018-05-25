@@ -3,11 +3,13 @@ import { execute, subscribe } from 'graphql';
 import { ServerOptions, SubscriptionServer } from 'subscriptions-transport-ws';
 import * as WebSocket from 'ws';
 
+import { SUBSCRIPTIONS_SERVER } from '../constants';
+
 @Injectable()
 export class SubscriptionService implements OnModuleDestroy {
   private subscriptionServer: SubscriptionServer;
 
-  constructor(@Inject('SUBSCRIPTIONS_SERVER') private readonly ws) {}
+  constructor(@Inject(SUBSCRIPTIONS_SERVER) private readonly ws) {}
 
   createServer(
     schema: any,

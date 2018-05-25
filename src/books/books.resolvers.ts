@@ -8,7 +8,7 @@ import { ApiQuery } from 'common/models/api-query.model';
 import { PubSub } from 'graphql-subscriptions';
 import { convertToMongoSortQuery } from 'utils/mongoSortQueryConverter';
 
-import { ROLES } from '../constants';
+import { PUB_SUB, ROLES } from '../constants';
 import { BookService } from './book.service';
 
 @Resolver('Book')
@@ -16,7 +16,7 @@ export class BooksResolvers {
   constructor(
     private readonly bookService: BookService,
     private readonly commentService: CommentsService,
-    @Inject('PubSub') private readonly pubSub: PubSub,
+    @Inject(PUB_SUB) private readonly pubSub: PubSub,
   ) {}
 
   @Query('books')

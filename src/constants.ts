@@ -1,3 +1,7 @@
+// Tokens
+export const PUB_SUB = 'PUB_SUB';
+export const SUBSCRIPTIONS_SERVER = 'SUBSCRIPTIONS_SERVER';
+
 export const ROLES = {
   ADMIN: 'admin',
   USER: 'user',

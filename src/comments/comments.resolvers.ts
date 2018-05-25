@@ -5,6 +5,7 @@ import * as DataLoader from 'dataloader';
 import { PubSub } from 'graphql-subscriptions';
 import { UserService } from 'users/user.service';
 
+import { PUB_SUB } from '../constants';
 import { CommentsService } from './comments.service';
 
 @Resolver('Comment')
@@ -14,7 +15,7 @@ export class CommentResolver {
   constructor(
     private readonly userService: UserService,
     private readonly commentService: CommentsService,
-    @Inject('PubSub') private readonly pubSub: PubSub,
+    @Inject(PUB_SUB) private readonly pubSub: PubSub,
   ) {
     this.usersLoader = new DataLoader((userIds: string[]) => {
       const promises = userIds.map(id => {

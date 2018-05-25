@@ -6,6 +6,7 @@ import { BookmarksModule } from 'bookmarks/bookmarks.module';
 import { BooksModule } from 'books/books.module';
 import { CommentsModule } from 'comments/comments.module';
 import { CoreModule } from 'core/core.module';
+import { LogsModule } from 'logs/logs.module';
 import { SubscriptionService } from 'subscriptions/subscription.service';
 import { UsersModule } from 'users/user.module';
 
@@ -17,6 +18,7 @@ import { UsersModule } from 'users/user.module';
     BooksModule,
     CommentsModule,
     BookmarksModule,
+    LogsModule,
   ],
 })
 export class AppModule implements NestModule {

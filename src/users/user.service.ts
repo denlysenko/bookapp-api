@@ -26,7 +26,7 @@ export class UserService {
     const count = await this.userModel.count(where);
     const rows = await this.userModel
       .find(where)
-      .skip(query.skip)
+      .skip(query.skip || 0)
       .limit(query.first || Number(this.configService.get('DEFAULT_LIMIT')))
       .sort(query.order)
       .exec();

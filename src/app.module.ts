@@ -8,6 +8,8 @@ import { CommentsModule } from 'comments/comments.module';
 import { ConfigModule } from 'config/config.module';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
+import { SubscriptionModule } from 'subscriptions/subscription.module';
+import { SubscriptionService } from 'subscriptions/subscription.service';
 import { UsersModule } from 'users/user.module';
 
 dotenv.config({
@@ -20,6 +22,7 @@ dotenv.config({
 @Module({
   imports: [
     GraphQLModule,
+    SubscriptionModule.forRoot(),
     MongooseModule.forRoot(`mongodb://mongodb`, {
       user: process.env.DB_USER,
       pass: process.env.DB_PASSWORD,
@@ -33,13 +36,22 @@ dotenv.config({
   ],
 })
 export class AppModule implements NestModule {
-  constructor(private readonly graphQLFactory: GraphQLFactory) {}
+  constructor(
+    private readonly graphQLFactory: GraphQLFactory,
+    private readonly subscriptionService: SubscriptionService,
+  ) {}
 
   configure(consumer: MiddlewareConsumer) {
     const schema = this.createSchema();
+    this.subscriptionService.createServer(schema);
 
     consumer
-      .apply(graphiqlExpress({ endpointURL: '/graphql' }))
+      .apply(
+        graphiqlExpress({
+          endpointURL: '/graphql',
+          subscriptionsEndpoint: `ws://localhost:3002/subscriptions`,
+        }),
+      )
       .forRoutes('/graphiql')
       .apply(
         graphqlExpress(req => ({

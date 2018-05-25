@@ -26,6 +26,7 @@
     "dataloader": "^1.4.0",
     "dotenv": "^5.0.1",
     "graphql": "^0.13.2",
+    "graphql-subscriptions": "^0.5.8",
     "graphql-tools": "^3.0.2",
     "jsonwebtoken": "^8.2.1",
     "mongoose": "^5.1.2",
@@ -33,7 +34,9 @@
     "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.0.0",
-    "typescript": "^2.6.2"
+    "subscriptions-transport-ws": "^0.9.9",
+    "typescript": "^2.6.2",
+    "ws": "^5.2.0"
   },
   "devDependencies": {
     "@types/express": "^4.0.39",

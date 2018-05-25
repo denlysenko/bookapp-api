@@ -7,11 +7,11 @@ export const ROLES = {
   USER: 'user',
 };
 
-export enum Bookmarks {
-  MUSTREAD,
-  WISHLIST,
-  FAVOURITE,
-}
+export const BOOKMARKS = {
+  MUSTREAD: 'MUSTREAD',
+  WISHLIST: 'WISHLIST',
+  FAVOURITE: 'FAVOURITE',
+};
 
 export const UserActions = {
   BOOK_CREATED: 'BOOK_CREATED',

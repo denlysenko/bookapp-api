@@ -31,7 +31,7 @@ export class BookmarkService {
   }
 
   async addToBookmarks(
-    type: number,
+    type: string,
     userId: string,
     bookId: string,
   ): Promise<Bookmark> {
@@ -44,7 +44,7 @@ export class BookmarkService {
     return await newBookmark.save();
   }
 
-  async removeFromBookmarks(type: number, userId: string, bookId: string) {
+  async removeFromBookmarks(type: string, userId: string, bookId: string) {
     const bookmark = await this.bookmarkModel.findOne({ type, bookId, userId });
     if (!bookmark) {
       throw new BadRequestException(BOOKMARK_ERRORS.BOOKMARK_NOT_FOUND_ERR);

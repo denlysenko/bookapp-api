@@ -27,12 +27,12 @@ type Book {
   description: String
   slug: String
   url: String
-  total_rating: Int
+  total_rating: Float
   total_rates: Int
-  rating: Int
+  rating: Float
   views: Int
   paid: Boolean
-  price: Int
+  price: Float
   comments: [Comment]
   createdAt: String
   updatedAt: String

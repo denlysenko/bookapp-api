@@ -1,6 +1,6 @@
 export interface Bookmark {
   _id: string;
   userId: string;
-  type: number;
+  type: string;
   bookId: string;
 }

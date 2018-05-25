@@ -1,10 +1,10 @@
 type Query {
-  bookmarks(type: Int!, skip: Int, first: Int): BookmarksResponse!
+  bookmarks(type: BookmarkType!, skip: Int, first: Int): BookmarksResponse!
 }
 
 type Mutation {
-  addToBookmarks(type: Int!, bookId: String!): Bookmark!
-  removeFromBookmarks(type: Int!, bookId: String!): Bookmark!
+  addToBookmarks(type: String!, bookId: String!): Bookmark!
+  removeFromBookmarks(type: String!, bookId: String!): Bookmark!
 }
 
 type BookmarksResponse {
@@ -13,6 +13,12 @@ type BookmarksResponse {
 }
 
 type Bookmark {
-  type: Int!
+  type: String!
   book: Book!
+}
+
+enum BookmarkType {
+  MUSTREAD
+  WISHLIST
+  FAVOURITE
 }

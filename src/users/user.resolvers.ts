@@ -16,8 +16,7 @@ export class UserResolver {
   @Query('users')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(ROLES.ADMIN)
-  async getUsers(obj, args, context, info) {
-    const { filter, skip, first, orderBy } = args;
+  async getUsers(obj, { filter, skip, first, orderBy }, context, info) {
     const order = (orderBy && convertToMongoSortQuery(orderBy)) || null;
     return await this.userService.findAll(
       new ApiQuery(
@@ -32,8 +31,7 @@ export class UserResolver {
   @Query('user')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(ROLES.ADMIN)
-  async getUser(obj, args, context, info) {
-    const { id } = args;
+  async getUser(obj, { id }, context, info) {
     return await this.userService.findById(id);
   }
 
@@ -46,35 +44,30 @@ export class UserResolver {
 
   @Mutation()
   @UseGuards(AuthGuard('jwt'))
-  async updateUser(obj, args, context, info) {
-    const { id, user } = args;
+  async updateUser(obj, { id, user }, context, info) {
     return await this.userService.update(id, user);
   }
 
   @Mutation()
   @UseGuards(AuthGuard('jwt'))
-  async changePassword(obj, args, context, info) {
-    const { id, newPassword, oldPassword } = args;
+  async changePassword(obj, { id, newPassword, oldPassword }, context, info) {
     return await this.userService.changePassword(id, oldPassword, newPassword);
   }
 
   @Mutation()
-  async requestResetPassword(obj, args, context, info) {
-    const { email } = args;
+  async requestResetPassword(obj, { email }, context, info) {
     return await this.userService.requestResetPassword(email);
   }
 
   @Mutation()
-  async resetPassword(obj, args, context, info) {
-    const { token, newPassword } = args;
+  async resetPassword(obj, { token, newPassword }, context, info) {
     return await this.userService.resetPassword(token, newPassword);
   }
 
   @Mutation()
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(ROLES.ADMIN)
-  async deleteUser(obj, args, context, info) {
-    const { id } = args;
+  async deleteUser(obj, { id }, context, info) {
     return await this.userService.remove(id);
   }
 }

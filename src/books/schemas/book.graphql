@@ -40,8 +40,8 @@ type BooksResponse {
 }
 
 input BookInput {
-  title: String!
-  author: String!
+  title: String
+  author: String
   description: String
   paid: Boolean
   price: Int

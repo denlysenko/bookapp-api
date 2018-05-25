@@ -23,16 +23,14 @@ export class CommentResolver {
   }
 
   @ResolveProperty('author')
-  async getAuthor(comment, args, context, info) {
-    const { authorId } = comment;
+  async getAuthor({ authorId }, args, context, info) {
     return await this.usersLoader.load(authorId);
   }
 
   @Mutation()
   @UseGuards(AuthGuard('jwt'))
-  async addComment(obj, args, context, info) {
+  async addComment(obj, { bookId, text }, context, info) {
     const authorId = info.rootValue.user._id;
-    const { bookId, text } = args;
     return await this.commentService.saveForBook(bookId, authorId, text);
   }
 }

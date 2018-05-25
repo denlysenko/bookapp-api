@@ -43,8 +43,8 @@ export class BookService {
     return await newBook.save();
   }
 
-  async update(slug: string, book: BookDto): Promise<Book> {
-    const updatingBook = this.bookModel.findOne({ slug }).exec();
+  async update(id: string, book: BookDto): Promise<Book> {
+    const updatingBook = await this.bookModel.findById(id).exec();
     _.extend(updatingBook, book);
     return await updatingBook.save();
   }

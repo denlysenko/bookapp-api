@@ -7,14 +7,12 @@ export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
   @Mutation()
-  async login(obj, args, context, info) {
-    const { email, password } = args;
+  async login(obj, { email, password }, context, info) {
     return await this.authService.login(email, password);
   }
 
   @Mutation()
-  async signup(obj, args, context, info) {
-    const { user } = args;
+  async signup(obj, { user }, context, info) {
     return await this.authService.signup(user);
   }
 }

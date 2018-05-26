@@ -8,6 +8,7 @@ import { BooksModule } from 'books/books.module';
 import { CommentsModule } from 'comments/comments.module';
 import { CoreModule } from 'core/core.module';
 import * as DataLoader from 'dataloader';
+import { FilesModule } from 'files/files.module';
 import { LogsModule } from 'logs/logs.module';
 import { SubscriptionService } from 'subscriptions/subscription.service';
 import { UsersModule } from 'users/user.module';
@@ -22,6 +23,7 @@ import { UserService } from 'users/user.service';
     CommentsModule,
     BookmarksModule,
     LogsModule,
+    FilesModule,
   ],
 })
 export class AppModule implements NestModule {

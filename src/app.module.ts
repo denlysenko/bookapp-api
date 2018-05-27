@@ -13,6 +13,7 @@ import { LogsModule } from 'logs/logs.module';
 import { SubscriptionService } from 'subscriptions/subscription.service';
 import { UsersModule } from 'users/user.module';
 import { UserService } from 'users/user.service';
+import { formatError } from 'utils/formatError';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ export class AppModule implements NestModule {
           context: {
             loaders,
           },
+          formatError,
         })),
       )
       .forRoutes('/graphql');

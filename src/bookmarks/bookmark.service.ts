@@ -7,7 +7,7 @@ import { LogDto } from 'logs/dto/log.dto';
 import { LogService } from 'logs/log.service';
 import { Model } from 'mongoose';
 
-import { BOOKMARK_ERRORS, BOOKMARKS } from '../constants';
+import { BOOKMARK_ERRORS, BOOKMARKS, USER_ACTIONS } from '../constants';
 import { Bookmark } from './interfaces/bookmark.interface';
 
 @Injectable()
@@ -46,7 +46,11 @@ export class BookmarkService {
     const newBookmark = new this.bookmarkModel({ type, userId, bookId });
     await newBookmark.save();
     await this.logService.create(
-      new LogDto(userId, `BOOK_ADDED_TO_${BOOKMARKS[type]}`, bookId),
+      new LogDto(
+        userId,
+        USER_ACTIONS[`BOOK_ADDED_TO_${BOOKMARKS[type]}`],
+        bookId,
+      ),
     );
     return newBookmark;
   }
@@ -60,7 +64,11 @@ export class BookmarkService {
     // BOOK_REMOVED_FROM_MUSTREAD
     await bookmark.remove();
     await this.logService.create(
-      new LogDto(userId, `BOOK_REMOVED_FROM_${BOOKMARKS[type]}`, bookId),
+      new LogDto(
+        userId,
+        USER_ACTIONS[`BOOK_REMOVED_FROM_${BOOKMARKS[type]}`],
+        bookId,
+      ),
     );
     return bookmark;
   }

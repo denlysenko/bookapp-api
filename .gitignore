@@ -41,4 +41,4 @@ Thumbs.db
 
 # Environment variables
 .env
-/src/config/development/.env
+/src/config/.env

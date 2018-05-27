@@ -4,7 +4,7 @@ import { LogDto } from 'logs/dto/log.dto';
 import { LogService } from 'logs/log.service';
 import { Model } from 'mongoose';
 
-import { UserActions } from '../constants';
+import { USER_ACTIONS } from '../constants';
 import { Comment } from './interfaces/comment.interface';
 
 @Injectable()
@@ -27,7 +27,7 @@ export class CommentsService {
 
     await newComment.save();
     await this.logService.create(
-      new LogDto(authorId, UserActions.COMMENT_ADDED, bookId),
+      new LogDto(authorId, USER_ACTIONS.COMMENT_ADDED, bookId),
     );
     return newComment;
   }

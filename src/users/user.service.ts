@@ -25,7 +25,7 @@ export class UserService {
     const where = query.filter || {};
     const count = await this.userModel.count(where);
     const rows = await this.userModel
-      .find(where)
+      .find(where, '-salt -password')
       .skip(query.skip || 0)
       .limit(query.first || Number(this.configService.get('DEFAULT_LIMIT')))
       .sort(query.order)
@@ -38,7 +38,7 @@ export class UserService {
   }
 
   async findById(id: string): Promise<User> {
-    return await this.userModel.findById(id).exec();
+    return await this.userModel.findById(id, '-salt -password').exec();
   }
 
   async findByEmail(email: string): Promise<User> {
@@ -58,9 +58,6 @@ export class UserService {
     return await user.save();
   }
 
-  // TODO implement later
-  async changeAvatar() {}
-
   async changePassword(
     id: string,
     oldPassword: string,
@@ -69,7 +66,7 @@ export class UserService {
     const oldPass = String(oldPassword);
     const newPass = String(newPassword);
 
-    const user = await this.userModel.findById(id).exec();
+    const user = await this.userModel.findById(id, '-salt -password').exec();
 
     if (user.authenticate(oldPass)) {
       user.password = newPass;
@@ -81,7 +78,9 @@ export class UserService {
 
   async requestResetPassword(email: string): Promise<string> {
     let token;
-    const user = await this.userModel.findOne({ email }).exec();
+    const user = await this.userModel
+      .findOne({ email }, '-salt -password')
+      .exec();
 
     if (!user) {
       throw new NotFoundException(USER_VALIDATION_ERRORS.EMAIL_NOT_FOUND_ERR);
@@ -116,7 +115,7 @@ export class UserService {
   }
 
   async remove(id: string): Promise<User> {
-    const user = await this.userModel.findById(id);
+    const user = await this.userModel.findById(id, '-salt -password');
     await user.remove();
     return user;
   }

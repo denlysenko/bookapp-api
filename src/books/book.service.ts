@@ -8,7 +8,7 @@ import { LogDto } from 'logs/dto/log.dto';
 import { LogService } from 'logs/log.service';
 import { Model } from 'mongoose';
 
-import { UserActions } from '../constants';
+import { USER_ACTIONS } from '../constants';
 import { BookDto } from './dto/book.dto';
 import { Book } from './interfaces/book.interface';
 
@@ -50,7 +50,7 @@ export class BookService {
     const newBook = new this.bookModel(book);
     await newBook.save();
     await this.logService.create(
-      new LogDto(userId, UserActions.BOOK_CREATED, newBook._id),
+      new LogDto(userId, USER_ACTIONS.BOOK_CREATED, newBook._id),
     );
     return newBook;
   }
@@ -60,7 +60,7 @@ export class BookService {
     _.extend(updatingBook, book);
     await updatingBook.save();
     await this.logService.create(
-      new LogDto(userId, UserActions.BOOK_UPDATED, updatingBook._id),
+      new LogDto(userId, USER_ACTIONS.BOOK_UPDATED, updatingBook._id),
     );
     return updatingBook;
   }
@@ -75,7 +75,7 @@ export class BookService {
     book.rating = rating;
     await book.save();
     await this.logService.create(
-      new LogDto(userId, UserActions.BOOK_RATED, book._id),
+      new LogDto(userId, USER_ACTIONS.BOOK_RATED, book._id),
     );
     return book;
   }

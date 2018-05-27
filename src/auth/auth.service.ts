@@ -5,12 +5,8 @@ import { UserDto } from 'users/dto/user.dto';
 import { User } from 'users/interfaces/user.interface';
 import { UserService } from 'users/user.service';
 
+import { AUTH_ERRORS } from '../constants';
 import { AuthPayload } from './interfaces/auth-payload.interface';
-
-const AUTH_ERRORS = {
-  INCORRECT_EMAIL_ERR: 'INCORRECT_EMAIL_ERR',
-  INCORRECT_PASSWORD_ERR: 'INCORRECT_PASSWORD_ERR',
-};
 
 @Injectable()
 export class AuthService {

@@ -53,7 +53,6 @@ input UserReadingInput {
   bookmark: String
 }
 
-# maybe needs to be moved in general schema
 input FilterInput {
   field: String
   search: String

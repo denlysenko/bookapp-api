@@ -81,10 +81,7 @@ UserSchema.path('email').validate(function(value) {
     .exec()
     .then(user => {
       if (user) {
-        if (this._id === user._id) {
-          return true;
-        }
-        return false;
+        return this._id.equals(user._id);
       }
       return true;
     })

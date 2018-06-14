@@ -50,7 +50,7 @@ export const UserSchema = new mongoose.Schema({
     validate: [validatePassword, USER_VALIDATION_ERRORS.PASSWORD_LENGTH_ERR],
   },
   salt: String,
-  avatarUrl: String,
+  avatar: String,
   roles: {
     type: [{ type: String, enum: [ROLES.ADMIN, ROLES.USER] }],
     default: [ROLES.USER],

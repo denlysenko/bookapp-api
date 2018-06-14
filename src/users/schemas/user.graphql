@@ -45,6 +45,7 @@ input UserInput {
   firstName: String
   lastName: String
   password: String
+  avatar: String
   reading: UserReadingInput
 }
 

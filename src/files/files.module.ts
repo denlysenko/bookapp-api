@@ -6,5 +6,6 @@ import { FileService } from './file.service';
 @Module({
   controllers: [FileController],
   providers: [FileService],
+  exports: [FileService],
 })
 export class FilesModule {}

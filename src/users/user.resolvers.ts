@@ -50,7 +50,8 @@ export class UserResolver {
 
   @Mutation()
   @UseGuards(AuthGuard('jwt'))
-  async changePassword(obj, { id, newPassword, oldPassword }, context, info) {
+  async changePassword(obj, { newPassword, oldPassword }, context, info) {
+    const id = info.rootValue.user._id;
     return await this.userService.changePassword(id, oldPassword, newPassword);
   }
 

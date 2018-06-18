@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ApiQuery } from 'common/models/api-query.model';
 import { ApiResponse } from 'common/models/api-response.model';
@@ -83,13 +83,15 @@ export class UserService {
     const oldPass = String(oldPassword);
     const newPass = String(newPassword);
 
-    const user = await this.userModel.findById(id, '-salt -password').exec();
+    const user = await this.userModel.findById(id).exec();
 
     if (user.authenticate(oldPass)) {
       user.password = newPass;
       return await user.save();
     } else {
-      throw new ForbiddenException();
+      throw new BadRequestException(
+        USER_VALIDATION_ERRORS.OLD_PASSWORD_MATCH_ERR,
+      );
     }
   }
 

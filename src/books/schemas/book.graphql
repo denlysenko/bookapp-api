@@ -47,6 +47,8 @@ input BookInput {
   title: String
   author: String
   description: String
+  coverUrl: String
+  epubUrl: String
   paid: Boolean
   price: Int
 }

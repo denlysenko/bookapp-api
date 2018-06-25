@@ -1,7 +1,9 @@
 import {
   BadRequestException,
   Controller,
+  Delete,
   FileInterceptor,
+  Param,
   Post,
   UploadedFile,
   UseGuards,
@@ -27,11 +29,11 @@ function fileFilter(req, file, cb) {
 
 const options = { fileFilter, limits: { fileSize: 10000000 } };
 
-@Controller('api')
+@Controller('api/files')
 export class FileController {
   constructor(private readonly fileService: FileService) {}
 
-  @Post('upload')
+  @Post()
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('file', options))
   async uploadFile(@UploadedFile() file) {
@@ -40,5 +42,11 @@ export class FileController {
     }
     const filename = `${uuidv4()}${path.extname(file.originalname)}`;
     return await this.fileService.uploadToS3(file.buffer, filename);
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
+  async deleteFile(@Param('id') key: string) {
+    return await this.fileService.deleteFromS3(key);
   }
 }

@@ -4,4 +4,6 @@ export class BookDto {
   readonly description: string;
   readonly paid?: boolean;
   readonly price?: number;
+  readonly coverUrl?: string;
+  readonly epubUrl?: string;
 }

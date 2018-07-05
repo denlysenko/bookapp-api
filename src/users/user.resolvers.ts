@@ -20,7 +20,7 @@ export class UserResolver {
     const order = (orderBy && convertToMongoSortQuery(orderBy)) || null;
     return await this.userService.findAll(
       new ApiQuery(
-        filter && { [filter.field]: new RegExp(`^${filter.search}`, 'i') },
+        filter && { [filter.field]: new RegExp(`${filter.search}`, 'i') },
         first,
         skip,
         order,

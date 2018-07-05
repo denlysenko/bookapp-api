@@ -1,5 +1,6 @@
 type Query {
   books(
+    paid: Boolean!
     filter: FilterInput
     skip: Int
     first: Int

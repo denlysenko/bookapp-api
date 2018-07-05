@@ -12,6 +12,7 @@ import { SubscriptionModule } from 'subscriptions/subscription.module';
       user: process.env.DB_USER,
       pass: process.env.DB_PASSWORD,
       dbName: process.env.DB_NAME,
+      // loggerLevel: 'debug',
     }),
     ConfigModule,
   ],

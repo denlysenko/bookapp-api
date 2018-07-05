@@ -21,15 +21,19 @@ export class BooksResolvers {
 
   @Query('books')
   @UseGuards(AuthGuard('jwt'))
-  async getBooks(obj, { filter, skip, first, orderBy }, context, info) {
+  async getBooks(obj, { paid, filter, skip, first, orderBy }, context, info) {
     const order = (orderBy && convertToMongoSortQuery(orderBy)) || null;
+    let where = { paid };
+
+    if (filter) {
+      where = {
+        ...where,
+        [filter.field]: new RegExp(`${filter.search}`, 'i'),
+      };
+    }
+
     return await this.bookService.findAll(
-      new ApiQuery(
-        filter && { [filter.field]: new RegExp(`^${filter.search}`, 'i') },
-        first,
-        skip,
-        order,
-      ),
+      new ApiQuery(where, first, skip, order),
     );
   }
 

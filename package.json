@@ -15,6 +15,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@google-cloud/storage": "^1.7.0",
     "@nestjs/common": "^5.0.0",
     "@nestjs/core": "^5.0.0",
     "@nestjs/graphql": "^3.0.0",
@@ -26,6 +27,7 @@
     "aws-sdk": "^2.247.1",
     "dataloader": "^1.4.0",
     "dotenv": "^5.0.1",
+    "firebase": "^5.3.0",
     "graphql": "^0.13.2",
     "graphql-subscriptions": "^0.5.8",
     "graphql-tools": "^3.0.2",

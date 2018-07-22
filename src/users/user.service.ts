@@ -64,7 +64,7 @@ export class UserService {
     ) {
       try {
         const splitted = user.avatar.split('/'); // take last part of uri as a key
-        await this.fileService.deleteFromS3(splitted[splitted.length - 1]);
+        await this.fileService.deleteFromBucket(splitted[splitted.length - 1]);
       } catch (err) {
         throw new BadRequestException(err);
       }

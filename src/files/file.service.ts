@@ -1,39 +1,48 @@
+import * as googleStorage from '@google-cloud/storage';
 import { Injectable } from '@nestjs/common';
-import { S3 } from 'aws-sdk';
-import { ManagedUpload } from 'aws-sdk/clients/s3';
+import { format } from 'util';
+
+const storage = googleStorage({
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  keyFilename: 'bookapp-cd051-firebase-adminsdk-5khci-fe7cf2f3b5.json',
+});
 
 @Injectable()
 export class FileService {
-  private s3bucket: S3;
+  private bucket: any;
 
   constructor() {
-    this.s3bucket = new S3({
-      credentials: {
-        accessKeyId: process.env.S3_ACCESS_KEY_ID,
-        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-      },
+    this.bucket = storage.bucket(process.env.FIREBASE_BUCKET_URL);
+  }
+
+  uploadToBucket(file: any, filename: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const blob = this.bucket.file(filename);
+
+      const blobStream = blob.createWriteStream({
+        metadata: {
+          contentType: file.mimetype,
+        },
+      });
+
+      blobStream.on('error', error => {
+        reject(error);
+      });
+
+      blobStream.on('finish', () => {
+        const publicUrl = format(
+          `https://firebasestorage.googleapis.com/v0/b/${this.bucket.name}/o/${
+            blob.name
+          }?alt=media`,
+        );
+        resolve(publicUrl);
+      });
+
+      blobStream.end(file);
     });
   }
 
-  async uploadToS3(
-    file: any,
-    filename: string,
-  ): Promise<ManagedUpload.SendData> {
-    return await this.s3bucket
-      .upload({
-        Bucket: process.env.S3_BUCKET_NAME,
-        Key: filename,
-        Body: file,
-      })
-      .promise();
-  }
-
-  async deleteFromS3(key: string) {
-    return await this.s3bucket
-      .deleteObject({
-        Bucket: process.env.S3_BUCKET_NAME,
-        Key: key,
-      })
-      .promise();
+  deleteFromBucket(key: string): Promise<any> {
+    return this.bucket.file(key).delete();
   }
 }

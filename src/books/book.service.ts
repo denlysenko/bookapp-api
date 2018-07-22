@@ -72,7 +72,7 @@ export class BookService {
     ) {
       const splitted = book.coverUrl.split('/'); // take last part of uri as a key
       filePromises.push(
-        this.fileService.deleteFromS3(splitted[splitted.length - 1]),
+        this.fileService.deleteFromBucket(splitted[splitted.length - 1]),
       );
     }
 
@@ -83,7 +83,7 @@ export class BookService {
     ) {
       const splitted = book.epubUrl.split('/'); // take last part of uri as a key
       filePromises.push(
-        this.fileService.deleteFromS3(splitted[splitted.length - 1]),
+        this.fileService.deleteFromBucket(splitted[splitted.length - 1]),
       );
     }
 

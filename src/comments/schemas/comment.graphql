@@ -11,4 +11,5 @@ type Comment {
   bookId: ID
   author: User
   text: String
+  createdAt: String
 }

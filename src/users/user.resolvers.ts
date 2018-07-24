@@ -37,9 +37,9 @@ export class UserResolver {
 
   @Query()
   @UseGuards(AuthGuard('jwt'))
-  async me(obj, args, context, info) {
-    const id = info.rootValue.user._id;
-    return await this.userService.findById(id);
+  me(obj, args, context, info) {
+    // we already have user after AuthGuard
+    return info.rootValue.user;
   }
 
   @Mutation()

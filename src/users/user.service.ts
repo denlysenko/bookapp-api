@@ -43,6 +43,12 @@ export class UserService {
     return await this.userModel.findById(id, '-salt -password').exec();
   }
 
+  async findByIds(ids: string[]): Promise<User[]> {
+    return await this.userModel
+      .find({ _id: { $in: ids } }, '-salt -password')
+      .exec();
+  }
+
   async findByEmail(email: string): Promise<User> {
     return await this.userModel.findOne({ email }).exec();
   }

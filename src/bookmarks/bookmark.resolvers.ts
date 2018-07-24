@@ -23,6 +23,13 @@ export class BookmarkResolver {
     );
   }
 
+  @Query('userBookmarksByBook')
+  @UseGuards(AuthGuard('jwt'))
+  async getUserBookmarksByBook(obj, { bookId }, context, info) {
+    const userId = info.rootValue.user._id;
+    return await this.bookmarkService.getByUserAndBook(userId, bookId);
+  }
+
   @Mutation()
   @UseGuards(AuthGuard('jwt'))
   async addToBookmarks(obj, { type, bookId }, context, info) {

@@ -48,6 +48,10 @@ export class BookService {
     return await this.bookModel.findById(id).exec();
   }
 
+  async findByIds(ids: string[]): Promise<Book[]> {
+    return await this.bookModel.find({ _id: { $in: ids } }).exec();
+  }
+
   async create(book: BookDto, userId: string): Promise<Book> {
     const newBook = new this.bookModel(book);
     await newBook.save();

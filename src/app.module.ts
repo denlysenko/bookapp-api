@@ -39,13 +39,23 @@ export class AppModule implements NestModule {
     const schema = this.createSchema();
     this.subscriptionService.createServer(schema);
     const loaders = {
-      booksLoader: new DataLoader((bookIds: string[]) => {
-        const promises = bookIds.map(id => this.bookService.findById(id));
-        return Promise.all(promises);
+      booksLoader: new DataLoader(async (bookIds: string[]) => {
+        const books = await this.bookService.findByIds(bookIds);
+        const data = {};
+        books.forEach(book => {
+          data[book._id] = book;
+        });
+
+        return bookIds.map(id => data[id]);
       }),
-      usersLoader: new DataLoader((userIds: string[]) => {
-        const promises = userIds.map(id => this.userService.findById(id));
-        return Promise.all(promises);
+      usersLoader: new DataLoader(async (userIds: string[]) => {
+        const users = await this.userService.findByIds(userIds);
+        const data = {};
+        users.forEach(user => {
+          data[user._id] = user;
+        });
+
+        return userIds.map(id => data[id]);
       }),
     };
 

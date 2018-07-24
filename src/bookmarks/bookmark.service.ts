@@ -33,6 +33,10 @@ export class BookmarkService {
     };
   }
 
+  getByUserAndBook(userId: string, bookId: string): Promise<Bookmark[]> {
+    return this.bookmarkModel.find({ userId, bookId }).exec();
+  }
+
   async addToBookmarks(
     type: string,
     userId: string,

@@ -1,5 +1,6 @@
 type Query {
   bookmarks(type: BookmarkType!, skip: Int, first: Int): BookmarksResponse!
+  userBookmarksByBook(bookId: ID!): [Bookmark]!
 }
 
 type Mutation {

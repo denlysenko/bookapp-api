@@ -38,18 +38,18 @@ export class BookService {
     };
   }
 
-  async findBySlug(slug: string): Promise<Book> {
-    return await this.bookModel
+  findBySlug(slug: string): Promise<Book> {
+    return this.bookModel
       .findOneAndUpdate({ slug }, { $inc: { views: 1 } })
       .exec();
   }
 
-  async findById(id: string): Promise<Book> {
-    return await this.bookModel.findById(id).exec();
+  findById(id: string): Promise<Book> {
+    return this.bookModel.findById(id).exec();
   }
 
-  async findByIds(ids: string[]): Promise<Book[]> {
-    return await this.bookModel.find({ _id: { $in: ids } }).exec();
+  findByIds(ids: string[]): Promise<Book[]> {
+    return this.bookModel.find({ _id: { $in: ids } }).exec();
   }
 
   async create(book: BookDto, userId: string): Promise<Book> {

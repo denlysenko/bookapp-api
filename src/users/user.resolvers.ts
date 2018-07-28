@@ -16,7 +16,7 @@ export class UserResolver {
   @Query('users')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(ROLES.ADMIN)
-  async getUsers(obj, { filter, skip, first, orderBy }, context, info) {
+  async getUsers(_, { filter, skip, first, orderBy }) {
     const order = (orderBy && convertToMongoSortQuery(orderBy)) || null;
     return await this.userService.findAll(
       new ApiQuery(
@@ -31,44 +31,44 @@ export class UserResolver {
   @Query('user')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(ROLES.ADMIN)
-  async getUser(obj, { id }, context, info) {
+  async getUser(_, { id }) {
     return await this.userService.findById(id);
   }
 
   @Query()
   @UseGuards(AuthGuard('jwt'))
-  me(obj, args, context, info) {
+  me(_, __, ___, info) {
     // we already have user after AuthGuard
     return info.rootValue.user;
   }
 
   @Mutation()
   @UseGuards(AuthGuard('jwt'))
-  async updateUser(obj, { id, user }, context, info) {
+  async updateUser(_, { id, user }) {
     return await this.userService.update(id, user);
   }
 
   @Mutation()
   @UseGuards(AuthGuard('jwt'))
-  async changePassword(obj, { newPassword, oldPassword }, context, info) {
+  async changePassword(_, { newPassword, oldPassword }, __, info) {
     const id = info.rootValue.user._id;
     return await this.userService.changePassword(id, oldPassword, newPassword);
   }
 
   @Mutation()
-  async requestResetPassword(obj, { email }, context, info) {
+  async requestResetPassword(_, { email }) {
     return await this.userService.requestResetPassword(email);
   }
 
   @Mutation()
-  async resetPassword(obj, { token, newPassword }, context, info) {
+  async resetPassword(_, { token, newPassword }) {
     return await this.userService.resetPassword(token, newPassword);
   }
 
   @Mutation()
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(ROLES.ADMIN)
-  async deleteUser(obj, { id }, context, info) {
+  async deleteUser(_, { id }) {
     return await this.userService.remove(id);
   }
 }

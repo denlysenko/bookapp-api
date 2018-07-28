@@ -17,7 +17,7 @@ export class LogResolver {
 
   @Query('logs')
   @UseGuards(AuthGuard('jwt'))
-  async getLogs(obj, { skip, first, orderBy }, context, info) {
+  async getLogs(_, { skip, first, orderBy }, __, info) {
     const userId = info.rootValue.user._id;
     const order = (orderBy && convertToMongoSortQuery(orderBy)) || null;
     return await this.logService.findAll(
@@ -33,7 +33,7 @@ export class LogResolver {
   }
 
   @ResolveProperty('book')
-  async getBook({ bookId }, args, context, info) {
-    return await context.loaders.booksLoader.load(bookId);
+  async getBook({ bookId }, _, { loaders }) {
+    return await loaders.booksLoader.load(bookId);
   }
 }

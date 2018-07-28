@@ -21,7 +21,7 @@ export class BooksResolvers {
 
   @Query('books')
   @UseGuards(AuthGuard('jwt'))
-  async getBooks(obj, { paid, filter, skip, first, orderBy }, context, info) {
+  async getBooks(_, { paid, filter, skip, first, orderBy }) {
     const order = (orderBy && convertToMongoSortQuery(orderBy)) || null;
     let where = { paid };
 
@@ -39,19 +39,19 @@ export class BooksResolvers {
 
   @Query('book')
   @UseGuards(AuthGuard('jwt'))
-  async getBook(obj, { slug }, context, info) {
+  async getBook(_, { slug }) {
     return await this.bookService.findBySlug(slug);
   }
 
   @ResolveProperty('comments')
-  async getComments({ id }, args, context, info) {
+  async getComments({ id }) {
     return await this.commentService.getAllForBook(id);
   }
 
   @Mutation()
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(ROLES.ADMIN)
-  async createBook(obj, { book }, context, info) {
+  async createBook(_, { book }, __, info) {
     const userId = info.rootValue.user._id;
     return await this.bookService.create(book, userId);
   }
@@ -59,14 +59,14 @@ export class BooksResolvers {
   @Mutation()
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(ROLES.ADMIN)
-  async updateBook(obj, { id, book }, context, info) {
+  async updateBook(_, { id, book }, __, info) {
     const userId = info.rootValue.user._id;
     return await this.bookService.update(id, book, userId);
   }
 
   @Mutation()
   @UseGuards(AuthGuard('jwt'))
-  async rateBook(obj, { id, rate }, context, info) {
+  async rateBook(_, { id, rate }, __, info) {
     const userId = info.rootValue.user._id;
     const bookRate = await this.bookService.rateBook(id, rate, userId);
     this.pubSub.publish('bookRated', { bookRated: bookRate });

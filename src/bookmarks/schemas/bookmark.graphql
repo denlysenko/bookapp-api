@@ -4,8 +4,8 @@ type Query {
 }
 
 type Mutation {
-  addToBookmarks(type: String!, bookId: String!): Bookmark!
-  removeFromBookmarks(type: String!, bookId: String!): Bookmark!
+  addToBookmarks(type: BookmarkType!, bookId: ID!): Bookmark!
+  removeFromBookmarks(type: BookmarkType!, bookId: ID!): Bookmark!
 }
 
 type BookmarksResponse {

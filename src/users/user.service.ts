@@ -39,18 +39,16 @@ export class UserService {
     };
   }
 
-  async findById(id: string): Promise<User> {
-    return await this.userModel.findById(id, '-salt -password').exec();
+  findById(id: string): Promise<User> {
+    return this.userModel.findById(id, '-salt -password').exec();
   }
 
-  async findByIds(ids: string[]): Promise<User[]> {
-    return await this.userModel
-      .find({ _id: { $in: ids } }, '-salt -password')
-      .exec();
+  findByIds(ids: string[]): Promise<User[]> {
+    return this.userModel.find({ _id: { $in: ids } }, '-salt -password').exec();
   }
 
-  async findByEmail(email: string): Promise<User> {
-    return await this.userModel.findOne({ email }).exec();
+  findByEmail(email: string): Promise<User> {
+    return this.userModel.findOne({ email }).exec();
   }
 
   async create(user: UserDto): Promise<User> {

@@ -14,8 +14,8 @@ export class CommentsService {
     private readonly logService: LogService,
   ) {}
 
-  async getAllForBook(bookId: string) {
-    return await this.commentModel.find({ bookId }).exec();
+  getAllForBook(bookId: string) {
+    return this.commentModel.find({ bookId }).exec();
   }
 
   async saveForBook(bookId: string, authorId: string, text: string) {

@@ -37,6 +37,14 @@ export class BooksResolvers {
     );
   }
 
+  @Query('bestBooks')
+  @UseGuards(AuthGuard('jwt'))
+  async getBestBooks(_, { skip, first }) {
+    return await this.bookService.findBestBooks(
+      new ApiQuery(null, first, skip),
+    );
+  }
+
   @Query('book')
   @UseGuards(AuthGuard('jwt'))
   async getBook(_, { slug }) {

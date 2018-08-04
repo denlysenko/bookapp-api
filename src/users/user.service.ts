@@ -25,7 +25,7 @@ export class UserService {
 
   async findAll(query?: ApiQuery): Promise<ApiResponse<User>> {
     const where = query.filter || {};
-    const count = await this.userModel.count(where);
+    const count = await this.userModel.countDocuments(where);
     const rows = await this.userModel
       .find(where, '-salt -password')
       .skip(query.skip || 0)

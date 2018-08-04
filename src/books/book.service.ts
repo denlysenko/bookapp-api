@@ -24,7 +24,7 @@ export class BookService {
 
   async findAll(query?: ApiQuery): Promise<ApiResponse<Book>> {
     const where = query.filter || {};
-    const count = await this.bookModel.count(where);
+    const count = await this.bookModel.countDocuments(where);
     const rows = await this.bookModel
       .find(where)
       .skip(query.skip || 0)
@@ -50,6 +50,21 @@ export class BookService {
 
   findByIds(ids: string[]): Promise<Book[]> {
     return this.bookModel.find({ _id: { $in: ids } }).exec();
+  }
+
+  async findBestBooks(query?: ApiQuery): Promise<ApiResponse<Book>> {
+    const where = { rating: 5 };
+    const count = await this.bookModel.countDocuments(where);
+    const rows = await this.bookModel
+      .find(where)
+      .skip(query.skip || 0)
+      .limit(query.first || Number(this.configService.get('DEFAULT_LIMIT')))
+      .exec();
+
+    return {
+      count,
+      rows,
+    };
   }
 
   async create(book: BookDto, userId: string): Promise<Book> {

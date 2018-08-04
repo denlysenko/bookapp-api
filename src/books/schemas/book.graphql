@@ -7,6 +7,7 @@ type Query {
     orderBy: BookOrderByInput
   ): BooksResponse!
   book(slug: String!): Book!
+  bestBooks(skip: Int, first: Int): BooksResponse!
 }
 
 type Mutation {

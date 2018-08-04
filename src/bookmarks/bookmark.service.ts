@@ -20,7 +20,7 @@ export class BookmarkService {
 
   async getByType(query?: ApiQuery): Promise<ApiResponse<Bookmark>> {
     const where = query.filter || {};
-    const count = await this.bookmarkModel.count(where);
+    const count = await this.bookmarkModel.countDocuments(where);
     const rows = await this.bookmarkModel
       .find(where)
       .skip(query.skip || 0)

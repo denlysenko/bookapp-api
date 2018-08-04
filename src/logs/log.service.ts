@@ -27,7 +27,7 @@ export class LogService {
 
   async findAll(query?: ApiQuery): Promise<ApiResponse<Log>> {
     const where = query.filter || {};
-    const count = await this.logModel.count(where);
+    const count = await this.logModel.countDocuments(where);
     const rows = await this.logModel
       .find(where)
       .skip(query.skip || 0)

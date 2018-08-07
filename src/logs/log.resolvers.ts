@@ -21,7 +21,7 @@ export class LogResolver {
     const userId = info.rootValue.user._id;
     const order = (orderBy && convertToMongoSortQuery(orderBy)) || null;
     return await this.logService.findAll(
-      new ApiQuery({ userId }, skip, first, order),
+      new ApiQuery({ userId }, first, skip, order),
     );
   }
 

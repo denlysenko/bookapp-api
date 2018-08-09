@@ -37,7 +37,7 @@ export class AppModule implements NestModule {
 
   configure(consumer: MiddlewareConsumer) {
     const schema = this.createSchema();
-    this.subscriptionService.createServer(schema);
+
     const loaders = {
       booksLoader: new DataLoader(
         async (bookIds: string[]) => {
@@ -64,6 +64,12 @@ export class AppModule implements NestModule {
         { cacheKeyFn: id => id.toString() },
       ),
     };
+
+    this.subscriptionService.createServer(schema, {
+      onOperation: (_, params) => {
+        return { ...params, context: { loaders } };
+      },
+    });
 
     consumer
       .apply(

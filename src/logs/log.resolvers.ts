@@ -2,7 +2,7 @@ import { Inject, UseGuards } from '@nestjs/common';
 import { Query, ResolveProperty, Resolver, Subscription } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiQuery } from 'common/models/api-query.model';
-import { PubSub } from 'graphql-subscriptions';
+import { PubSub, withFilter } from 'graphql-subscriptions';
 import { convertToMongoSortQuery } from 'utils/mongoSortQueryConverter';
 
 import { PUB_SUB } from '../constants';
@@ -28,7 +28,11 @@ export class LogResolver {
   @Subscription()
   logCreated() {
     return {
-      subscribe: () => this.pubSub.asyncIterator('logCreated'),
+      subscribe: withFilter(
+        () => this.pubSub.asyncIterator('logCreated'),
+        (payload, variables) =>
+          payload.logCreated.userId.equals(variables.userId),
+      ),
     };
   }
 

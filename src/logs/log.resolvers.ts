@@ -26,6 +26,7 @@ export class LogResolver {
   }
 
   @Subscription()
+  @UseGuards(AuthGuard('jwt'))
   logCreated() {
     return {
       subscribe: withFilter(

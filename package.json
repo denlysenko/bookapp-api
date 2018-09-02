@@ -8,7 +8,7 @@
     "format": "prettier --write \"**/*.ts\"",
     "start": "ts-node -r tsconfig-paths/register src/main.ts",
     "start:dev": "nodemon",
-    "prestart:prod": "rm -rf dist && tsc",
+    "prestart:prod": "rm -rf dist && tsc && copyfiles -u 1 src/**/*.graphql dist && copyfiles -u 1 src/**/.env dist",
     "start:prod": "node dist/main.js",
     "test": "jest",
     "test:cov": "jest --coverage",
@@ -31,6 +31,7 @@
     "graphql-subscriptions": "^0.5.8",
     "graphql-tools": "^3.1.1",
     "jsonwebtoken": "^8.3.0",
+    "module-alias": "^2.1.0",
     "mongoose": "^5.2.12",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
@@ -46,6 +47,7 @@
     "@types/jest": "^23.3.1",
     "@types/node": "^10.9.4",
     "@types/supertest": "^2.0.5",
+    "copyfiles": "^2.0.0",
     "jest": "^23.5.0",
     "nodemon": "^1.18.4",
     "prettier": "^1.14.2",
@@ -68,5 +70,19 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "coverageDirectory": "../coverage"
+  },
+  "_moduleAliases": {
+    "core": "dist/core",
+    "auth": "dist/auth",
+    "bookmarks": "dist/bookmarks",
+    "books": "dist/books",
+    "comments": "dist/comments",
+    "common": "dist/common",
+    "config": "dist/config",
+    "files": "dist/files",
+    "logs": "dist/logs",
+    "subscriptions": "dist/subscriptions",
+    "users": "dist/users",
+    "utils": "dist/utils"
   }
 }

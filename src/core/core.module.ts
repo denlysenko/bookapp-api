@@ -8,11 +8,7 @@ import { SubscriptionModule } from 'subscriptions/subscription.module';
   imports: [
     GraphQLModule,
     SubscriptionModule.forRoot(),
-    MongooseModule.forRoot(`mongodb://mongodb`, {
-      user: process.env.DB_USER,
-      pass: process.env.DB_PASSWORD,
-      dbName: process.env.DB_NAME,
-    }),
+    MongooseModule.forRoot(process.env.OPENSHIFT_DB_URL),
     ConfigModule,
   ],
   exports: [GraphQLModule, SubscriptionModule],

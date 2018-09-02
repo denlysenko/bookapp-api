@@ -42,4 +42,5 @@ Thumbs.db
 # Environment variables
 .env
 /src/config/.env
+
 /bookapp-cd051-firebase-adminsdk-5khci-fe7cf2f3b5.json

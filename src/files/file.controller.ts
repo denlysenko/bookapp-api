@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   FileInterceptor,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   UploadedFile,
@@ -41,12 +43,13 @@ export class FileController {
       throw new BadRequestException(FILE_ERRORS.INVALID_MIMETYPE_ERR);
     }
     const filename = `${uuidv4()}${path.extname(file.originalname)}`;
-    return await this.fileService.uploadToS3(file.buffer, filename);
+    return await this.fileService.uploadToBucket(file.buffer, filename);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
+  @HttpCode(HttpStatus.OK)
   async deleteFile(@Param('id') key: string) {
-    return await this.fileService.deleteFromS3(key);
+    return await this.fileService.deleteFromBucket(key);
   }
 }

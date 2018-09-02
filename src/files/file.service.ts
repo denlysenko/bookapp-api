@@ -15,7 +15,7 @@ export class FileService {
     this.bucket = storage.bucket(process.env.FIREBASE_BUCKET_URL);
   }
 
-  uploadToBucket(file: any, filename: string): Promise<string> {
+  uploadToBucket(file: any, filename: string): Promise<{ publicUrl: string }> {
     return new Promise((resolve, reject) => {
       const blob = this.bucket.file(filename);
 
@@ -35,7 +35,7 @@ export class FileService {
             blob.name
           }?alt=media`,
         );
-        resolve(publicUrl);
+        resolve({ publicUrl });
       });
 
       blobStream.end(file);

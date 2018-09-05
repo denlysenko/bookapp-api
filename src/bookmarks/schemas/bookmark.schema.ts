@@ -1,8 +1,6 @@
-import { Schema, set } from 'mongoose';
+import { Schema } from 'mongoose';
 
 import { BOOKMARKS } from '../../constants';
-
-set('debug', true);
 
 export const BookmarkSchema = new Schema({
   bookId: Schema.Types.ObjectId,
